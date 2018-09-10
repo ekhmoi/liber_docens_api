@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { ItemsModule } from './modules/items/items.module';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
@@ -11,7 +10,6 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRoot('mongodb://localhost/nest', { useNewUrlParser: true }),
     AuthModule,
     UserModule,
-    ItemsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

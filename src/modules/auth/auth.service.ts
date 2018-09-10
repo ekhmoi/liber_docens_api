@@ -1,21 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { CreateTokenDto } from './dto/create-token.dto';
 import { UserService } from '../user/user.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
     constructor(
-        private readonly jwtService: JwtService
+        private readonly jwtSrv: JwtService,
+        private readonly userSrv: UserService
     ) { }
 
-    async signIn() {
-        // In the real-world app you shouldn't expose this method publicly
-        // instead, return a token once you verify user credentials
-        const user = { email: 'user@email.com' };
-        return this.jwtService.sign(user);
+    async validateUser(payload): Promise<any> {
+        console.log(payload);
+        return await this.userSrv.getUserByEmail(payload.email);
     }
 
-    async validateUser(payload): Promise<any> {
-        return { email: 'dashshaq@dash.aq' }
+    async createToken(body: CreateTokenDto) {
+        const user = await this.userSrv.getUserByEmail(body.email);
+        const passwordIsValid = bcrypt.compareSync(body.password, user ? user.password : '');
+
+        if (!passwordIsValid) {
+            return {
+                auth: false
+            }
+        } else {
+            const token = this.jwtSrv.sign({email: user.email});
+            return { auth: true, token };
+        }
     }
 }
+ 
