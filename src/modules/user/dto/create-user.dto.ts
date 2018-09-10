@@ -1,4 +1,5 @@
-import { IsEmail, MinLength, ValidateNested, IsString, IsNumber } from 'class-validator';
+import { IsEmail, MinLength, ValidateNested, IsString, IsNumber, IsEnum } from 'class-validator';
+import { UserTypes } from '../user.schema';
 export class CreatUserDtoProfile {
 }
 
@@ -14,5 +15,7 @@ export class CreateUserDto {
     readonly lastName: string;
     @IsNumber()
     readonly dateOfBirth: number;
+    @IsEnum([UserTypes.Teacher, UserTypes.Student])
+    readonly type: UserTypes
 }
 

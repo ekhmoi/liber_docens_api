@@ -12,10 +12,14 @@ export class UserService {
     constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
-        const hashedPassword = await this.hashPassword(createUserDto.password);
-        const createdUser = new this.userModel({...createUserDto, password: hashedPassword });
-        await createdUser.save();
-        return this.getById(createdUser.id);
+        try {
+            const hashedPassword = await this.hashPassword(createUserDto.password);
+            const createdUser = new this.userModel({...createUserDto, password: hashedPassword });
+            await createdUser.save();
+            return await this.getById(createdUser.id);
+        } catch (err) {
+            return err;
+        }
     }
 
     async hashPassword(password: string): Promise<string> {
