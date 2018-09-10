@@ -1,7 +1,9 @@
 import * as mongoose from 'mongoose';
 
 export const UserSchema = new mongoose.Schema({
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    profile: { type: {firstName: String, lastName: String, dateOfBirth: Number }, default: { firstName: '', lastName: '', dateOfBirth: 0}},
-});
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true, select: false },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    dateOfBirth: { type: String, required: Number }
+}, { timestamps: {} });

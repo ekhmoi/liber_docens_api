@@ -14,22 +14,27 @@ export class UserService {
     async create(createUserDto: CreateUserDto): Promise<User> {
         const hashedPassword = await this.hashPassword(createUserDto.password);
         const createdUser = new this.userModel({...createUserDto, password: hashedPassword });
-        return await createdUser.save();
+        await createdUser.save();
+        return this.getById(createdUser.id);
     }
 
     async hashPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, this.saltRounds);
     }
 
-    async getById(_id: string): Promise<User> {
-        return await this.userModel.findOne({ _id })
+    async getById(_id: string): Promise<User | any> {
+        return await this.userModel.findOne({ _id });
     }
 
     async deleteUserById(_id: string): Promise<any> {
         return await this.userModel.deleteOne({ _id }).exec();
     }
 
-    async getUserByEmail(email: string): Promise<User> {
-        return await this.userModel.findOne({email});
+    async getUserByEmail(email: string, withPassword: boolean = false): Promise<User> {
+        return await this.userModel.findOne({email}).select('_id email +password')
+    }
+
+    async canRequestUser(id: string, user: User): Promise<boolean> {
+        return user.id === id;
     }
 }

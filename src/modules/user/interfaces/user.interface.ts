@@ -1,5 +1,6 @@
-export interface User {
-    _id?: string;
+import { Document } from 'mongoose'
+export interface User extends Document {
+    _id: string;
     email: string;
     profile: Object;
     password?: string;

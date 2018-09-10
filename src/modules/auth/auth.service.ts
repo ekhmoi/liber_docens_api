@@ -12,12 +12,11 @@ export class AuthService {
     ) { }
 
     async validateUser(payload): Promise<any> {
-        console.log(payload);
-        return await this.userSrv.getUserByEmail(payload.email);
+        return await this.userSrv.getById(payload._id);
     }
 
     async createToken(body: CreateTokenDto) {
-        const user = await this.userSrv.getUserByEmail(body.email);
+        const user = await this.userSrv.getUserByEmail(body.email, true);
         const passwordIsValid = bcrypt.compareSync(body.password, user ? user.password : '');
 
         if (!passwordIsValid) {
@@ -25,7 +24,7 @@ export class AuthService {
                 auth: false
             }
         } else {
-            const token = this.jwtSrv.sign({email: user.email});
+            const token = this.jwtSrv.sign({_id: user._id});
             return { auth: true, token };
         }
     }

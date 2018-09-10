@@ -1,0 +1,6 @@
+{
+    "git.ignoreLimitWarning": true,
+    "debug.node.autoAttach": "on",
+    "typescript.useCodeSnippetsOnMethodSuggest": true,
+    "debug.openDebug": "neverOpen"
+}
