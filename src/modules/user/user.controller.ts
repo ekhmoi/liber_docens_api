@@ -8,10 +8,8 @@ import {
     Param,
     Post,
     Request,
-    UploadedFiles,
     UseGuards,
     UseInterceptors,
-    FilesInterceptor,
     UploadedFile,
     FileInterceptor,
 } from '@nestjs/common';
