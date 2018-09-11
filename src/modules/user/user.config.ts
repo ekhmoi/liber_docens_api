@@ -1,7 +1,6 @@
 import * as multer from 'multer';
 import * as mkdirp from 'mkdirp';
 import { AuthenticatedRequest } from 'interface/AuthenticatedRequest';
-import { join } from 'path';
 
 const userPrivateDirectory = process.cwd() + '/@uploads/users';
 const fileSize = 5 * 10 * 10 * 10 * 10 * 10 * 10; // 5mb in bytes

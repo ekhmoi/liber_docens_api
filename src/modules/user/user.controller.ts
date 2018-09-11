@@ -12,6 +12,8 @@ import {
     UseGuards,
     UseInterceptors,
     FilesInterceptor,
+    UploadedFile,
+    FileInterceptor,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
@@ -83,16 +85,17 @@ export class UserController {
 
     @Post('avatar')
     @UseInterceptors(
-        FilesInterceptor('avatar', 1, uploadAvatarOptions)
+        FileInterceptor('avatar', uploadAvatarOptions)
     )
     @UseGuards(AuthGuard())
     async updateAvatar(
-        @UploadedFiles() avatar,
+        @UploadedFile() avatar,
         @Request() request: AuthenticatedRequest
     ) {
         if (avatar) {
             if (request.user.avatar === defaultAvatarPath) {
-                return await this.userSrv.setCustomAvatar(request.user);
+                const response = await this.userSrv.setCustomAvatar(request.user);
+                return response ? true : false;
             } else {
                 return true;
             }
@@ -106,6 +109,7 @@ export class UserController {
     async deleteAvatar(
         @Request() request: AuthenticatedRequest
     ) {
-        this.userSrv.removeAvatar(request.user)
+        const response = await this.userSrv.removeAvatar(request.user);
+        return response ? true : false;
     }
 }
