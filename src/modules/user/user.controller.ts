@@ -1,13 +1,26 @@
-import { Controller, Get, UseGuards, Request, Post, Body, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post,
+    Request,
+    UploadedFiles,
+    UseGuards,
+    UseInterceptors,
+    FilesInterceptor,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticatedRequest } from 'interface/AuthenticatedRequest';
-import { User } from './interfaces/user.interface';
+import { uploadAvatarOptions, defaultAvatarPath } from './user.config';
 
 @Controller('user')
 export class UserController {
-
     constructor(private readonly userSrv: UserService) { }
 
     /**
@@ -60,13 +73,39 @@ export class UserController {
      * @param id id of the user to delete. It will be ignored if internal is false
      * @param internal 
      */
-    @Delete(':id')
+    @Delete()
     @UseGuards(AuthGuard())
     async delete(
         @Request() request: AuthenticatedRequest,
-        @Param('id') id: string,
-        internal: boolean = false
     ) {
-        return this.userSrv.deleteUserById(internal ? id : request.user._id);
+        return this.userSrv.deleteUserById(request.user._id);
+    }
+
+    @Post('avatar')
+    @UseInterceptors(
+        FilesInterceptor('avatar', 1, uploadAvatarOptions)
+    )
+    @UseGuards(AuthGuard())
+    async updateAvatar(
+        @UploadedFiles() avatar,
+        @Request() request: AuthenticatedRequest
+    ) {
+        if (avatar) {
+            if (request.user.avatar === defaultAvatarPath) {
+                return await this.userSrv.setCustomAvatar(request.user);
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Delete('avatar')
+    @UseGuards(AuthGuard())
+    async deleteAvatar(
+        @Request() request: AuthenticatedRequest
+    ) {
+        this.userSrv.removeAvatar(request.user)
     }
 }

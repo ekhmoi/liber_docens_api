@@ -4,17 +4,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
+import { defaultAvatarPath } from './user.config';
 
 @Injectable()
 export class UserService {
     private saltRounds = 10;
-    
+
     constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
     async create(createUserDto: CreateUserDto): Promise<User> {
         try {
             const hashedPassword = await this.hashPassword(createUserDto.password);
-            const createdUser = new this.userModel({...createUserDto, password: hashedPassword });
+            const createdUser = new this.userModel({ ...createUserDto, password: hashedPassword });
             await createdUser.save();
             return await this.getById(createdUser.id);
         } catch (err) {
@@ -35,10 +36,18 @@ export class UserService {
     }
 
     async getUserByEmail(email: string, withPassword: boolean = false): Promise<User> {
-        return await this.userModel.findOne({email}).select('_id email +password')
+        return await this.userModel.findOne({ email }).select('_id email +password')
     }
 
     async canRequestUser(id: string, user: User): Promise<boolean> {
         return user.id === id;
+    }
+
+    async setCustomAvatar(user: User): Promise<any> {
+        return await this.userModel.findOneAndUpdate({ _id: user.id }, { $set: { avatar: `users/${user.id}/avatar.png` } }, { new: true }).exec();
+    }
+
+    async removeAvatar(user: User): Promise<any> {
+        return await this.userModel.findOneAndUpdate({ _id: user.id }, { $set: { avatar: defaultAvatarPath } }, { new: true }).exec();
     }
 }

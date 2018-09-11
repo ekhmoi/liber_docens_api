@@ -4,4 +4,7 @@ export interface User extends Document {
     email: string;
     profile: Object;
     password?: string;
+    avatar?: string;
+    firstName?: string;
+    lastName?: string;
 }

@@ -24,9 +24,8 @@ export class AuthService {
                 auth: false
             }
         } else {
-            const token = this.jwtSrv.sign({_id: user._id});
+            const token = this.jwtSrv.sign({ _id: user._id });
             return { auth: true, token };
         }
     }
 }
- 
