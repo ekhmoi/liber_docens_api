@@ -1,4 +1,5 @@
 import { Document } from 'mongoose'
+import { UserTypes } from '../user.schema';
 export interface User extends Document {
     _id: string;
     email: string;
@@ -7,4 +8,5 @@ export interface User extends Document {
     avatar?: string;
     firstName?: string;
     lastName?: string;
+    type?: UserTypes;
 }
