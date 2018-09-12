@@ -7,11 +7,7 @@ import { uploadAvatarOptions } from './asset.config';
 @Controller('asset')
 export class AssetController {
 
-    constructor(
-        private readonly assetSrv: AssetService
-    ) {
-
-    }
+    constructor(private readonly assetSrv: AssetService) { }
 
     @Post()
     @UseGuards(AuthGuard())
@@ -52,5 +48,3 @@ export class AssetController {
         return await this.assetSrv.removeAsset(id, request.user);
     }
 }
-
-
