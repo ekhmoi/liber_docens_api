@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { defaultAvatarPath } from './user.config';
 
 export enum UserTypes {
     Teacher = 'teacher',
@@ -13,5 +12,5 @@ export const UserSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     dateOfBirth: { type: String, required: Number },
     type: { type: String, enum: [UserTypes.Student, UserTypes.Teacher], required: true },
-    avatar: { type: String, required: false, default: defaultAvatarPath }
+    avatar: { type: String, required: false, default: 'files/default-avatar.png' }
 }, { timestamps: {} });

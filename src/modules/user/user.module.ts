@@ -4,7 +4,6 @@ import { UserController } from './user.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from './user.schema';
 import { PassportModule } from '@nestjs/passport';
-import path from 'path';
 
 @Module({
   imports: [

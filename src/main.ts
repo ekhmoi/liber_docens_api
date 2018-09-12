@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { ErrorFilter } from './global/error.filter';
 import { join } from 'path';
+import * as express from 'express';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,9 +11,9 @@ async function bootstrap() {
     whitelist: true,
     transform: true
   }));
-  app.useStaticAssets(join(__dirname, '..', '@uploads'));
-  // Uncomment it back when you finish error handling completely
-  // app.useGlobalFilters(new ErrorFilter())
+  // Serves static files of users.
+  // The path can be moved to some configuration file later
+  app.use('/assets', express.static(join(__dirname, '..', '@assets')));
   await app.listen(3000);
 }
 bootstrap();

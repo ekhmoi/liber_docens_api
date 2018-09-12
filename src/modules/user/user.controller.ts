@@ -9,15 +9,11 @@ import {
     Post,
     Request,
     UseGuards,
-    UseInterceptors,
-    UploadedFile,
-    FileInterceptor,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthenticatedRequest } from 'interface/AuthenticatedRequest';
-import { uploadAvatarOptions, defaultAvatarPath } from './user.config';
 
 @Controller('user')
 export class UserController {
@@ -37,8 +33,6 @@ export class UserController {
     /**
      * Get user details. By default will return the details of current logged in user
      * @param id 
-     * 
-     * #TODO: Add internal property and return by id only when internal is true. See this.delete
      */
     @Get(':id')
     @UseGuards(AuthGuard())
@@ -55,7 +49,9 @@ export class UserController {
     }
 
     /**
-     * Will return User object of currently logged in user
+     * Will return all the available users to current user
+     * 
+     * #TODO - Not implemented
      * @param request 
      */
     @Get()
@@ -73,7 +69,7 @@ export class UserController {
      * @param id id of the user to delete. It will be ignored if internal is false
      * @param internal 
      */
-    @Delete()
+    @Delete(':id')
     @UseGuards(AuthGuard())
     async delete(
         @Request() request: AuthenticatedRequest,
@@ -81,33 +77,4 @@ export class UserController {
         return this.userSrv.deleteUserById(request.user._id);
     }
 
-    @Post('avatar')
-    @UseInterceptors(
-        FileInterceptor('avatar', uploadAvatarOptions)
-    )
-    @UseGuards(AuthGuard())
-    async updateAvatar(
-        @UploadedFile() avatar,
-        @Request() request: AuthenticatedRequest
-    ) {
-        if (avatar) {
-            if (request.user.avatar === defaultAvatarPath) {
-                const response = await this.userSrv.setCustomAvatar(request.user);
-                return response ? true : false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Delete('avatar')
-    @UseGuards(AuthGuard())
-    async deleteAvatar(
-        @Request() request: AuthenticatedRequest
-    ) {
-        const response = await this.userSrv.removeAvatar(request.user);
-        return response ? true : false;
-    }
 }

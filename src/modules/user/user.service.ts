@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
-import { defaultAvatarPath } from './user.config';
 
 @Injectable()
 export class UserService {
@@ -41,13 +40,5 @@ export class UserService {
 
     async canRequestUser(id: string, user: User): Promise<boolean> {
         return user.id === id;
-    }
-
-    async setCustomAvatar(user: User): Promise<any> {
-        return await this.userModel.findOneAndUpdate({ _id: user.id }, { $set: { avatar: `users/${user.id}/avatar.png` } }, { new: true }).exec();
-    }
-
-    async removeAvatar(user: User): Promise<any> {
-        return await this.userModel.findOneAndUpdate({ _id: user.id }, { $set: { avatar: defaultAvatarPath } }, { new: true }).exec();
     }
 }

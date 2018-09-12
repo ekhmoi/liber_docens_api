@@ -1,13 +1,13 @@
 import * as multer from 'multer';
 import * as mkdirp from 'mkdirp';
 import { AuthenticatedRequest } from 'interface/AuthenticatedRequest';
+import { Utils } from '../../global/utils';
 
-const userPrivateDirectory = process.cwd() + '/@uploads/users';
+const userPrivateDirectory = process.cwd() + '/@assets/users';
 const fileSize = 5 * 10 * 10 * 10 * 10 * 10 * 10; // 5mb in bytes
-export const defaultAvatarPath = 'files/default-avatar.png';
 export const uploadAvatarOptions = {
     limits: {
-        files: 1,
+        files: 5,
         fileSize
     },
     storage: multer.diskStorage({
@@ -22,7 +22,8 @@ export const uploadAvatarOptions = {
             });
         },
         filename: (req: AuthenticatedRequest, file, callback) => {
-            callback(null, 'avatar.png')
+            const name = `${Utils.guidGenerator()}.${Utils.getExtension(file.originalname)}`;
+            callback(null, name)
         }
     })
 }
