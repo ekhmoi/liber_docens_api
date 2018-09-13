@@ -10,7 +10,7 @@ export class SubscriptionService {
 
     constructor(@InjectModel('Subscription') private readonly subscriptionModel: Model<Subscription>) { }
 
-    public async getSubscriptions(user: User): Promise<any> {
+    public async getSubscriptions(user: User): Promise<Subscription[]> {
         if (user.type === UserTypes.Teacher) {
             return this.getTeacherSubscribers(user.id);
         } else if (user.type === UserTypes.Student) {
@@ -18,7 +18,7 @@ export class SubscriptionService {
         }
     }
 
-    private async getTeacherSubscribers(owner: string): Promise<any> {
+    private async getTeacherSubscribers(owner: string): Promise<Subscription[]> {
         return this.subscriptionModel.find({ owner });
     }
 
