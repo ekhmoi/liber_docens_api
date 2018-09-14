@@ -16,6 +16,7 @@ export class SubscriptionService {
         } else if (user.type === UserTypes.Student) {
             return this.getStudentSubscriptions(user.id);
         }
+        
     }
 
     private async getTeacherSubscribers(owner: string): Promise<Subscription[]> {
