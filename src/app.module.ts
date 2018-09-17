@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AssetModule } from './modules/asset/asset.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { TemplateModule } from './modules/template/template.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
     UserModule,
     AssetModule,
     SubscriptionModule,
+    TemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],

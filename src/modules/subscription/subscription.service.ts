@@ -38,6 +38,7 @@ export class SubscriptionService {
         } else if (user.type === UserTypes.Student) {
             return this.getStudentSubscriptions(user.id);
         }
+        
     }
 
     public async getById(_id: string, user: User): Promise<Subscription<User>> {
